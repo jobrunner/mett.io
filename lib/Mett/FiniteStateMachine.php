@@ -1,4 +1,5 @@
 <?php
+namespace Mett;
 /**
  * Class FiniteStateMachine
  */
@@ -51,6 +52,7 @@ class FiniteStateMachine
      *        })
      *    );
      *
+     *    use Mett;
      *    $fsm = new FiniteStateMachine($state);
      *    $fsm->emit
      *
