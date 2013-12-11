@@ -3,7 +3,6 @@ class MettFiniteStateMachineTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->uuidFormat = "#^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$#";
         $this->states = array(
             array(
                 'state'      => 'working',
