@@ -3,7 +3,8 @@ class UUIDTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->uuidFormat = "#^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$#";
+        $this->uuidFormat  = "#^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$#";
+        $this->invalidUUID = '1546058f-5a25-4334-85ae-e68f2a44bbaz';
     }
 
     public function testNsUrlConstant()
@@ -30,6 +31,12 @@ class UUIDTest extends PHPUnit_Framework_TestCase
     {
         $result = \Mett\UUID::v3('1546058f-5a25-4334-85ae-e68f2a44bbaf', uniqid('uuid test', true));
         $this->assertRegExp($this->uuidFormat, $result);
+    }
+
+    public function testV3InvalidData()
+    {
+        $result = \Mett\UUID::v3($this->invalidUUID, uniqid('uuid test', true));
+        $this->assertFalse($result);
     }
 
     public function testV4()
@@ -60,5 +67,11 @@ class UUIDTest extends PHPUnit_Framework_TestCase
     {
         $result = \Mett\UUID::v5(\Mett\UUID::NS_X500_DN, 'X500-description');
         $this->assertRegExp($this->uuidFormat, $result);
+    }
+
+    public function testV5InvalidData()
+    {
+        $result = \Mett\UUID::v5($this->invalidUUID, 'Invalid-description');
+        $this->assertFalse($result);
     }
 }
