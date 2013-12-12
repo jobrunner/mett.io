@@ -1,4 +1,7 @@
 <?php
+
+use Mett\FiniteStateMachine;
+
 class MettFiniteStateMachineTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
@@ -39,12 +42,12 @@ class MettFiniteStateMachineTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testMettFiniteStateMachine()
+    public function testFiniteStateMachine()
     {
         $this->expectOutputString("I'm working.\nI'm thinking.\nI smoke until done.\nI'm working.\n");
 
         // goes into initial state and implicitly executes action
-        $fsm = new Mett\FiniteStateMachine($this->states);
+        $fsm = new FiniteStateMachine($this->states);
 
         // testing the initial state
         $this->assertEquals("working", $fsm->getState());
@@ -66,12 +69,12 @@ class MettFiniteStateMachineTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("working", $fsm->getState());
     }
 
-    public function testMettFiniteStateMachineAction()
+    public function testFiniteStateMachineAction()
     {
         $this->expectOutputString("I'm working.\nI'm working.\n");
 
         // goes into initial state and implicitly executes action
-        $fsm = new Mett\FiniteStateMachine($this->states);
+        $fsm = new FiniteStateMachine($this->states);
 
         // explicitly executes action of initial state
         $fsm->execAction();
@@ -80,21 +83,21 @@ class MettFiniteStateMachineTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException \Mett\FiniteStateMachine\InvalidStatesException
      */
-    public function testMettFiniteStateMachineStateDefinition()
+    public function testFiniteStateMachineStateDefinition()
     {
         // must throw an exception because FSM cannot got into any state
-        $fsm = new Mett\FiniteStateMachine(null);
+        $fsm = new FiniteStateMachine(null);
     }
 
     /**
      * @expectedException \Mett\FiniteStateMachine\NoInitialStateException
      */
-    public function testMettFiniteStateMachineStateDefinition2()
+    public function testFiniteStateMachineStateDefinition2()
     {
         // must throw an exception because FSM cannot got into any state
         $states = $this->states;
         unset($states[0]['initial']);
 
-        $fsm = new Mett\FiniteStateMachine($states);
+        $fsm = new FiniteStateMachine($states);
     }
 }
