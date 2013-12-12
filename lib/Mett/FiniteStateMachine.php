@@ -65,50 +65,48 @@ class FiniteStateMachine
         $this->_states = $states;
         $this->indexes = array();
 
+        if (empty($states)) {
+            throw new FiniteStateMachine\InvalidStatesException('Finite state machine must have at least one configured state.');
+        }
+
         foreach ($this->_states as $stateNumber => $state) {
             $this->_indexes[$state['state']] = $stateNumber;
             if (isset($state['initial'])) {
-                $this->_currentState = $state;
-                $this->execAction();
+                $this->_initializeInitState($state['state']);
             }
         }
 
-        if (null == $this->_currentState) {
-            throw new \Exception('No initial state given in transition table.');
+        if (empty($this->_currentState)) {
+            throw new FiniteStateMachine\NoInitialStateException('No initial state given in transition table.');
         }
+    }
+
+    protected function _initializeInitState($state)
+    {
+        if (empty($this->_currentState) && isset($this->_indexes[$state])) {
+            $this->_currentState = $this->_states[$this->_indexes[$state]];
+            $this->execAction();
+       }
     }
 
     public function dispatch($transition)
     {
-        if (empty($this->_currentState) && isset($this->_indexes[$transition])) {
-            $this->_currentState = $this->_states[$this->_indexes[$transition]];
-
-            return;
-        }
-
         if (isset($this->_currentState['transition'][$transition])) {
             $this->_currentState = $this->_states[$this->_indexes[$this->_currentState['transition'][$transition]]];
             $this->execAction();
         }
     }
 
-    public function execAction()
+    public function execAction(array $params = null)
     {
         if (is_callable($this->_currentState['action'])) {
 
-            return call_user_func($this->_currentState['action']);
+            call_user_func($this->_currentState['action'], $params);
         }
-
-        return null;
     }
 
     public function getState()
     {
-        if (empty($this->_currentState)) {
-
-            return null;
-        }
-
         return $this->_currentState['state'];
     }
 }

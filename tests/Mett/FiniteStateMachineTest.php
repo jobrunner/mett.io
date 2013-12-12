@@ -42,6 +42,8 @@ class MettFiniteStateMachineTest extends PHPUnit_Framework_TestCase
     public function testMettFiniteStateMachine()
     {
         $this->expectOutputString("I'm working.\nI'm thinking.\nI smoke until done.\nI'm working.\n");
+
+        // goes into initial state and implicitly executes action
         $fsm = new Mett\FiniteStateMachine($this->states);
 
         // testing the initial state
@@ -62,5 +64,37 @@ class MettFiniteStateMachineTest extends PHPUnit_Framework_TestCase
         // ok, I'm finished smoking and have to work
         $fsm->dispatch('smoked finished');
         $this->assertEquals("working", $fsm->getState());
+    }
+
+    public function testMettFiniteStateMachineAction()
+    {
+        $this->expectOutputString("I'm working.\nI'm working.\n");
+
+        // goes into initial state and implicitly executes action
+        $fsm = new Mett\FiniteStateMachine($this->states);
+
+        // explicitly executes action of initial state
+        $fsm->execAction();
+    }
+
+    /**
+     * @expectedException \Mett\FiniteStateMachine\InvalidStatesException
+     */
+    public function testMettFiniteStateMachineStateDefinition()
+    {
+        // must throw an exception because FSM cannot got into any state
+        $fsm = new Mett\FiniteStateMachine(null);
+    }
+
+    /**
+     * @expectedException \Mett\FiniteStateMachine\NoInitialStateException
+     */
+    public function testMettFiniteStateMachineStateDefinition2()
+    {
+        // must throw an exception because FSM cannot got into any state
+        $states = $this->states;
+        unset($states[0]['initial']);
+
+        $fsm = new Mett\FiniteStateMachine($states);
     }
 }
