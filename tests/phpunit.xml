@@ -11,8 +11,8 @@
          bootstrap="./bootstrap.php"
 >
     <testsuites>
-        <testsuite name="Finite State Machine Test Suites">
-            <directory>./tests/Mett/</directory>
+        <testsuite name="Mett">
+            <directory>Mett/</directory>
         </testsuite>
     </testsuites>
 
