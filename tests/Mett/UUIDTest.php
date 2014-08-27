@@ -1,6 +1,9 @@
 <?php
 class UUIDTest extends PHPUnit_Framework_TestCase
 {
+    public $uuidFormat;
+    public $invalidUUID;
+
     public function setUp()
     {
         $this->uuidFormat  = "#^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$#";
@@ -73,5 +76,23 @@ class UUIDTest extends PHPUnit_Framework_TestCase
     {
         $result = \Mett\UUID::v5($this->invalidUUID, 'Invalid-description');
         $this->assertFalse($result);
+    }
+
+    public function testV4Binary16LengthOf16Bytes()
+    {
+        $binaryUUID = \Mett\UUID::v4binary16();
+        $expected = 16;
+
+        $this->assertEquals($expected, strlen($binaryUUID));
+    }
+
+    public function testHexUUIDFromBinary16()
+    {
+        $binaryUUID = pack("H*", "4C80BE7D4F5B461CBFE66F694BEFF7A3");
+
+        $result   = \Mett\UUID::hexUUIDFromBinary16($binaryUUID);
+        $expected = "4C80BE7D-4F5B-461C-BFE6-6F694BEFF7A3";
+
+        $this->assertEquals($expected, $result);
     }
 }
