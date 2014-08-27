@@ -5,4 +5,9 @@ php:
   - 5.4
   - hhvm
 
-script: phpunit --verbose --coverage-html reports tests
+before_script:
+  - wget http://getcomposer.org/composer.phar
+  - php composer.phar install
+  - phpunit
+
+script: phpunit --configuration phpunit.xml --coverage-html tests/report
