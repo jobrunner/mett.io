@@ -1,10 +1,19 @@
 {
-    "name": "jbrunner/mett.io",
+    "name": "mett/mett",
+    "keywords": ["micromett"],
     "description": "Some mett.io",
     "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Job Runner",
+            "email": "job@mett.io",
+            "homepage": "http://mett.io/"
+        }
+    ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.4.0",
         "ext-mcrypt": "*"
     },
     "autoload": {
