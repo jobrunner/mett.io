@@ -8,17 +8,17 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="./bootstrap.php"
+         bootstrap="./tests/bootstrap.php"
 >
     <testsuites>
         <testsuite name="Mett">
-            <directory suffix="Test.php">Mett/</directory>
+            <directory suffix="Test.php">tests/Mett/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./Mett/</directory>
+            <directory>./tests/Mett/</directory>
         </whitelist>
     </filter>
 </phpunit>
