@@ -1,13 +1,8 @@
 <?php
 class Base62Test extends PHPUnit_Framework_TestCase
 {
-//    public $uuidFormat;
-//    public $invalidUUID;
-
     public function setUp()
     {
-//        $this->uuidFormat  = "#^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$#";
-//        $this->invalidUUID = '1546058f-5a25-4334-85ae-e68f2a44bbaz';
         $this->map = [
             ['b10' =>  0, 'b62' =>  "0"],
             ['b10' =>  1, 'b62' =>  "1"],
@@ -22,23 +17,23 @@ class Base62Test extends PHPUnit_Framework_TestCase
         ];
     }
 
-//    public function testAgainstEdgesEncode()
-//    {
-//        $coder  = new Mett\Base62();
-//
-//        foreach ($this->map as $edge) {
-//            $this->assertSame($coder->encode($edge['b10']), $edge['b62']);
-//        }
-//    }
-//
-//    public function testAgainstEdgesDecode()
-//    {
-//        $coder  = new Mett\Base62();
-//
-//        foreach ($this->map as $edge) {
-//            $this->assertSame($coder->decode($edge['b62']), $edge['b10']);
-//        }
-//    }
+    public function testAgainstEdgesEncode()
+    {
+        $coder  = new Mett\Base62();
+
+        foreach ($this->map as $edge) {
+            $this->assertSame($coder->encode($edge['b10']), $edge['b62']);
+        }
+    }
+
+    public function testAgainstEdgesDecode()
+    {
+        $coder  = new Mett\Base62();
+
+        foreach ($this->map as $edge) {
+            $this->assertSame($coder->decode($edge['b62']), $edge['b10']);
+        }
+    }
 
     public function testAgainstSingleValue()
     {
@@ -54,13 +49,13 @@ class Base62Test extends PHPUnit_Framework_TestCase
         $this->assertSame($integer, $base10);
     }
 
-//    public function testAgainstEdgesEncodeDecode()
-//    {
-//        $coder   = new Mett\Base62();
-//
-//        for ($b10 = 0; $b10 < 1000000; $b10 += 7) {
-//            $b62 = $coder->encode($b10);
-//            $this->assertSame($coder->decode($b62), $b10);
-//        }
-//    }
+    public function testAgainstEdgesEncodeDecode()
+    {
+        $coder   = new Mett\Base62();
+
+        for ($b10 = 0; $b10 < 1000000; $b10 += 7) {
+            $b62 = $coder->encode($b10);
+            $this->assertSame($coder->decode($b62), $b10);
+        }
+    }
 }
