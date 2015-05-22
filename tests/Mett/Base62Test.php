@@ -1,7 +1,5 @@
 <?php
 
-use \Mett\Coder\Base62;
-
 class Base62Test extends PHPUnit_Framework_TestCase
 {
     protected $map;
@@ -24,7 +22,7 @@ class Base62Test extends PHPUnit_Framework_TestCase
 
     public function testAgainstEdgesEncode()
     {
-        $coder  = new Base62();
+        $coder  = new \Mett\Coder\Base62();
 
         foreach ($this->map as $edge) {
             $this->assertEquals($edge['b62'], $coder->encode($edge['b10']));
@@ -33,7 +31,7 @@ class Base62Test extends PHPUnit_Framework_TestCase
 
     public function testAgainstEdgesDecode()
     {
-        $coder  = new Base62();
+        $coder  = new \Mett\Coder\Base62();
 
         foreach ($this->map as $edge) {
             $this->assertSame($coder->decode($edge['b62']), $edge['b10']);
@@ -42,7 +40,7 @@ class Base62Test extends PHPUnit_Framework_TestCase
 
     public function testAgainstSingleValue()
     {
-        $coder    = new Base62();
+        $coder    = new \Mett\Coder\Base62();
         $integer  = "6982525576617459241";
         $shouldBe = "8Jo2YRupCC9";
 
@@ -55,7 +53,7 @@ class Base62Test extends PHPUnit_Framework_TestCase
 
     public function testAgainstLongValue_2()
     {
-        $coder    = new Base62();
+        $coder    = new \Mett\Coder\Base62();
         $integer  = "6982525576617459241";
         $shouldBe = "8Jo2YRupCC9";
 
@@ -68,7 +66,7 @@ class Base62Test extends PHPUnit_Framework_TestCase
 
     public function testAgainstSingleValue_3()
     {
-        $coder   = new Base62();
+        $coder   = new \Mett\Coder\Base62();
 
         $integer  = "4324323453534";
         $shouldbe = "1E8BwWCM";
@@ -82,7 +80,7 @@ class Base62Test extends PHPUnit_Framework_TestCase
 
     public function testAgainstSingleValue_4()
     {
-        $coder   = new Base62();
+        $coder   = new \Mett\Coder\Base62();
 
         $integer  = "9223372032559808411";
         $shouldBe = "AzL8mvrPtYR";
@@ -96,7 +94,7 @@ class Base62Test extends PHPUnit_Framework_TestCase
 
     public function testAgainstEdgesEncodeDecode()
     {
-        $coder   = new Base62();
+        $coder   = new \Mett\Coder\Base62();
 
         for ($b10 = 0; $b10 < 1000000; $b10 += 100) {
             $b62 = $coder->encode($b10);
