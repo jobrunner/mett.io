@@ -4,226 +4,74 @@ use Mett\LatLng;
 
 class LatLngTest extends PHPUnit_Framework_TestCase
 {
-    public function testLatLonFromString1()
+    protected $map;
+
+    public function setUp()
     {
-        $latLon = LatLng::latLonFromString("N43°38'19.39\" E70°38'21.23\"");
-
-        $expected = 43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = 70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
+        $latitude  = 43.638719444444;
+        $longitude = 70.639230555556;
+        $this->map = [
+             0 => ['source' =>  "N 43°38'19.39\" E 70°38'21.23\"",          'latitude' =>  $latitude, 'longitude' =>  $longitude],
+             1 => ['source' =>  "N43°38'19.39\" E70°38'21.23\"",            'latitude' =>  $latitude, 'longitude' =>  $longitude],
+             2 => ['source' =>  "S -43°38'19.39\" W -70°38'21.23\"",        'latitude' =>  $latitude, 'longitude' =>  $longitude],
+             3 => ['source' =>  "S-43°38'19.39\" W-70°38'21.23\"",          'latitude' =>  $latitude, 'longitude' =>  $longitude],
+             4 => ['source' =>  "N43°38.32316667' E70°38.35383333'",        'latitude' =>  $latitude, 'longitude' =>  $longitude],
+             5 => ['source' =>  "S-43°38.32316667' W-70°38.35383333'",      'latitude' =>  $latitude, 'longitude' =>  $longitude],
+             6 => ['source' =>  "S -43°38.32316667' W -70°38.35383333'",    'latitude' =>  $latitude, 'longitude' =>  $longitude],
+             7 => ['source' =>  "43°38'19.39\"N 70°38'21.23\"E",            'latitude' =>  $latitude, 'longitude' =>  $longitude],
+             8 => ['source' =>  "-43°38'19.39\"S -70°38'21.23\"W",          'latitude' =>  $latitude, 'longitude' =>  $longitude],
+             9 => ['source' =>  "-43°38'19.39\"S -70°38'21.23\"W",          'latitude' =>  $latitude, 'longitude' =>  $longitude],
+            10 => ['source' =>  "-43°38'19.39\"S -70°38'21.23\"W",          'latitude' =>  $latitude, 'longitude' =>  $longitude],
+            11 => ['source' =>  "43°38.32316667'N 70°38.35383333'E",        'latitude' =>  $latitude, 'longitude' =>  $longitude],
+            12 => ['source' =>  "-43°38.32316667'S -70°38.35383333'W",      'latitude' =>  $latitude, 'longitude' =>  $longitude],
+            13 => ['source' =>  "-43°38.32316667'S  -70°38.35383333'W",     'latitude' =>  $latitude, 'longitude' =>  $longitude],
+            14 => ['source' =>  "S43°38'19.39\" W70°38'21.23\"",            'latitude' => -$latitude, 'longitude' => -$longitude],
+            15 => ['source' =>  "43°38'19.39\"S 70°38'21.23\"W",            'latitude' => -$latitude, 'longitude' => -$longitude],
+            16 => ['source' =>  "43°38'19.39\"S;70°38'21.23\"W",            'latitude' => -$latitude, 'longitude' => -$longitude],
+            17 => ['source' =>  "43°38'19,39\"S 70°38'21,23\"W",            'latitude' => -$latitude, 'longitude' => -$longitude],
+            18 => ['source' =>  "N43°38’19.39“ E70 38 21.23''",             'latitude' =>  $latitude, 'longitude' =>  $longitude],
+            19 => ['source' =>  "43.638719444444;70.639230555556",          'latitude' =>  $latitude, 'longitude' =>  $longitude],
+            20 => ['source' =>  "43,638719444444;70,639230555556",          'latitude' =>  $latitude, 'longitude' =>  $longitude],
+            21 => ['source' =>  "+43.638719444444;+70.639230555556",        'latitude' =>  $latitude, 'longitude' =>  $longitude],
+            22 => ['source' =>  "-43,638719444444;+70,639230555556",        'latitude' => -$latitude, 'longitude' =>  $longitude],
+            23 => ['source' =>  "+43.638719444444; -70.639230555556",       'latitude' =>  $latitude, 'longitude' => -$longitude],
+            24 => ['source' =>  "+43.0;-70.639230555556",                   'latitude' =>  43,        'longitude' => -$longitude],
+            25 => ['source' =>  "-43;-70.639230555556",                     'latitude' => -43,        'longitude' => -$longitude],
+            26 => ['source' =>  "-43;-70.639230555556",                     'latitude' => -43,        'longitude' => -$longitude],
+            27 => ['source' =>  "43.1;-70",                                 'latitude' =>  43.1,      'longitude' => -70],
+            28 => ['source' =>  "-43;-70",                                  'latitude' => -43,        'longitude' => -70],
+            29 => ['source' =>  "-43,-70",                                  'latitude' => -43,        'longitude' => -70],
+            30 => ['source' =>  "43.638719444444,70.639230555556",          'latitude' =>  $latitude, 'longitude' =>  $longitude],
+            31 => ['source' =>  "43.638719444444°,70.639230555556°",        'latitude' =>  $latitude, 'longitude' =>  $longitude],
+            32 => ['source' =>  "+43.638719444444°,-70.639230555556°",      'latitude' =>  $latitude, 'longitude' => -$longitude],
+            33 => ['source' =>  "-43.638719444444°,+70.639230555556°",      'latitude' => -$latitude, 'longitude' =>  $longitude],
+            34 => ['source' =>  "N43.638719444444°,E70.639230555556°",      'latitude' =>  $latitude, 'longitude' =>  $longitude],
+            35 => ['source' =>  "S43.638719444444°,E70.639230555556°",      'latitude' => -$latitude, 'longitude' =>  $longitude],
+            36 => ['source' =>  "S-43.638719444444°,W-70.639230555556°",    'latitude' =>  $latitude, 'longitude' =>  $longitude],
+            40 => ['source' =>  "+43,638719444444, -70,639230555556",       'latitude' =>  $latitude, 'longitude' => -$longitude],
+            41 => ['source' =>  "+43,638719444444, -70.639230555556",       'latitude' =>  $latitude, 'longitude' => -$longitude],
+        ];
     }
 
-    public function testLatLonFromString2()
+    public function testLatLonFromString()
     {
-        $latLon = LatLng::latLonFromString("43°38'19.39\"N 70°38'21.23\"E");
-
-        $expected = 43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = 70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromString3()
-    {
-        $latLon = LatLng::latLonFromString("S43°38'19.39\" W70°38'21.23\"");
-
-        $expected = -43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = -70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromString4()
-    {
-        $latLon = LatLng::latLonFromString("43°38'19.39\"S 70°38'21.23\"W");
-
-        $expected = -43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = -70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromString5()
-    {
-        $latLon = LatLng::latLonFromString("43°38'19.39\"S;70°38'21.23\"W");
-
-        $expected = -43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = -70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromString6()
-    {
-        $latLon = LatLng::latLonFromString("43°38'19,39\"S 70°38'21,23\"W");
-
-        $expected = -43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = -70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromString7()
-    {
-        $latLon = LatLng::latLonFromString("N43°38’19.39“ E70 38 21.23''");
-
-        $expected = 43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = 70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromString8()
-    {
-        $latLon = LatLng::latLonFromString("43,638719444444;70,639230555556");
-
-        $expected = 43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = 70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromString9()
-    {
-        $latLon = LatLng::latLonFromString("+43.638719444444;+70.639230555556");
-
-        $expected = 43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = 70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromStringNotNiceButOk()
-    {
-        $latLon = LatLng::latLonFromString("-43,638719444444;+70,639230555556");
-
-        $expected = -43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = 70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromString10()
-    {
-        $latLon = LatLng::latLonFromString("+43.638719444444; -70.639230555556");
-
-        $expected = 43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = -70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromString11()
-    {
-        $latLon = LatLng::latLonFromString("+43.0;-70.639230555556");
-
-        $expected = 43;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = -70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromString12()
-    {
-        $latLon = LatLng::latLonFromString("-43;-70.639230555556");
-
-        $expected = -43.0;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = -70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromString13()
-    {
-        $latLon = LatLng::latLonFromString("43.1;-70");
-
-        $expected = 43.1;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = -70.0;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromString14()
-    {
-        $latLon = LatLng::latLonFromString("-43;-70");
-
-        $expected = -43.0;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = -70.0;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    public function testLatLonFromString15()
-    {
-        $latLon = LatLng::latLonFromString("-43,-70");
-
-        $expected = -43.0;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = -70.0;
-        self::assertEquals($expected, $latLon->longitude);
+        foreach ($this->map as $index => $test) {
+            $latLon = LatLng::latLonFromString($test['source']);
+            self::assertEquals($test['latitude'],  $latLon->latitude, "In Test No. $index");
+            self::assertEquals($test['longitude'], $latLon->longitude);
+        }
     }
 
     /**
-     * @expectedException \Exception
+     * @group singleLatLonFromString
      */
-    public function testLatLonFromStringWithException1()
+    public function testLatLonFromStringSingle()
     {
-        $latLon = LatLng::latLonFromString("+43,638719444444, -70,639230555556");
-
-        $expected = 43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = -70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
-    }
-
-    /**
-     * @expectedException \Exception
-     */
-    public function testLatLonFromStringWithException2()
-    {
-        $latLon = LatLng::latLonFromString("+43,638719444444, -70.639230555556");
-
-        $expected = 43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = -70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
+        $index = 41;
+        $test  = $this->map[$index];
+        $latLon = LatLng::latLonFromString($test['source']);
+        self::assertEquals($test['latitude'],  $latLon->latitude, "In Test No. $index");
+        self::assertEquals($test['longitude'], $latLon->longitude);
     }
 
     /**
@@ -231,13 +79,14 @@ class LatLngTest extends PHPUnit_Framework_TestCase
      */
     public function testLatLonFromStringWithException3()
     {
-        $latLon = LatLng::latLonFromString("+43;638719444444,-70.639230555556");
+        LatLng::latLonFromString("+43;638719444444,-70.639230555556");
+    }
 
-        $expected = 43.638719444444;
-
-        self::assertEquals($expected, $latLon->latitude);
-
-        $expected = -70.639230555556;
-        self::assertEquals($expected, $latLon->longitude);
+    /**
+     * @expectedException \Exception
+     */
+    public function testLatLonFromStringWithException4()
+    {
+        LatLng::latLonFromString("+43;");
     }
 }

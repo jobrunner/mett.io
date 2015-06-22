@@ -59,7 +59,14 @@ class LatLng
             return new self($latLng->latitude, $latLng->longitude);
         }
 
-        $latLng = self::latLngCoordinatesFromDecimalString($latLngString);
+        $latLng = self::latLngCoordinatesFromDegreesMinutesString($latLngString);
+
+        if ($latLng != null) {
+
+            return new self($latLng->latitude, $latLng->longitude);
+        }
+
+        $latLng = self::latLngCoordinatesFromDegreesString($latLngString);
 
         if (null != $latLng) {
 
@@ -71,9 +78,9 @@ class LatLng
 
     public static function latLngCoordinatesFromDegreesMinutesSecondsString($latLonString)
     {
-        $regex  = '#(([NSEWO]{0,1})\s*([\-+]{0,1}[0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+([.,][0-9]+){0,1})[^0-9NSEWO]*([NSEWO]{0,1}))';
+        $regex  = '#(([NSEWO]{0,1})\s*([\-+]{0,1}[0-9]{1,3})[^0-9.,]+([0-9]{1,2})[^0-9.,]+([0-9]+([.,][0-9]+){0,1})[^0-9NSEWO]*([NSEWO]{0,1}))';
         $regex .=  '[\s;,]+';
-        $regex .=  '(([NSEWO]{0,1})\s*([\-+]{0,1}[0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+([.,][0-9]+){0,1})[^0-9NSEWO]*([NSEWO]{0,1}))#u';
+        $regex .=  '(([NSEWO]{0,1})\s*([\-+]{0,1}[0-9]{1,3})[^0-9.,]+([0-9]{1,2})[^0-9.,]+([0-9]+([.,][0-9]+){0,1})[^0-9NSEWO]*([NSEWO]{0,1}))#u';
 
         $latitude  = null;
         $longitude = null;
@@ -96,7 +103,7 @@ class LatLng
             $degrees = $matches[10];
             $minutes = $matches[11];
             $seconds = str_replace(',', '.', $matches[12]);
-            $heading = empty($matches[9]) ? $matches[14] : $matches[9];
+            $heading = empty($matches[9]) ? (empty($matches[14]) ? $matches[7] : $matches[14]) : $matches[9];
             $heading = str_replace('O', 'E', $heading);
 
             $secondCoord  = self::decimalFromDegreesMinutesSeconds($degrees, $minutes, $seconds, $heading);
@@ -113,71 +120,121 @@ class LatLng
         }
     }
 
-    public static function latLngCoordinatesFromDecimalString($latLngString)
+    public static function latLngCoordinatesFromDegreesMinutesString($latLonString)
     {
-        if (preg_match('#([+\-]){0,1}([0-9]+(([.,])[0-9]+){0,1})([^0-9.+\-]+)([+\-]){0,1}([0-9]+(([.,])[0-9]+){0,1})#u', $latLngString, $matches)) {
+        $regex  = '#^(([NSEWO]{0,1})\s*([\-+]{0,1}[0-9]+)[^0-9.,]+(\d+([.,]\d+){0,1})[^0-9NSEWO]*([NSEWO]{0,1}))';
+        $regex .=  '[\s;,]+';
+        $regex .=  '(([NSEWO]{0,1})\s*([\-+]{0,1}[0-9]+)[^0-9.,]+(\d+([.,]\d+){0,1})[^0-9NSEWO]*([NSEWO]{0,1}))$#u';
 
-            $decimalPointLatitude  = empty($matches[4]) ? '' : $matches[4];
-            $decimalPointLongitude = empty($matches[9]) ? '' : $matches[9];
-            $separator             = $matches[5];
+        $latitude  = null;
+        $longitude = null;
 
+        if (preg_match($regex, $latLonString, $matches)) {
 
-            // Heureka if-Orgie! :-(
-            if (!empty($decimalPointLatitude)) {
-                if (!empty($decimalPointLongitude)) {
+            $degrees = $matches[3];
+            $minutes = (float)str_replace(',', '.', $matches[4]);
 
-                    if (false !== strstr($separator, $decimalPointLongitude)) {
-                        return null;
-                    }
+            $heading = empty($matches[2]) ? $matches[6] : $matches[2];
+            $heading = str_replace('O', 'E', $heading);
 
-                    if ($decimalPointLatitude != $decimalPointLongitude) {
-                        return null;
-                    }
+            $firstCoord = self::decimalFromDegreesMinutesSeconds($degrees, $minutes, 0, $heading);
 
-                } else {
-
-                    if (false !== strstr($separator, $decimalPointLatitude)) {
-                        return null;
-                    }
-                }
+            if ($firstCoord['type'] == 'latitude') {
+                $latitude  = $firstCoord['decimal'];
             } else {
-                if (!empty($decimalPointLongitude)) {
-                    if (false !== strstr($separator, $decimalPointLongitude)) {
-                        return null;
-                    }
-                }
+                $longitude = $firstCoord['decimal'];
             }
 
-            $latitude = (float)str_replace(',', '.', $matches[2]);
+            $degrees = $matches[9];
+            $minutes = str_replace(',', '.', $matches[10]);
+            $heading = empty($matches[8]) ?  (empty($matches[12]) ? $matches[6] : $matches[12]) : $matches[8];
+            $heading = str_replace('O', 'E', $heading);
 
-            if ($matches[1] == '-') {
-                $latitude = $latitude * (-1);
-            }
+            $secondCoord  = self::decimalFromDegreesMinutesSeconds($degrees, $minutes, 0, $heading);
 
-            $longitude = (float)str_replace(',', '.', $matches[7]);
-
-            if ($matches[6] == '-') {
-                $longitude = $longitude * (-1);
+            if ($secondCoord['type'] == 'latitude') {
+                $latitude = $secondCoord['decimal'];
+            } else {
+                $longitude = $secondCoord['decimal'];
             }
 
             return (object)['latitude' => $latitude, 'longitude' => $longitude];
+        } else {
+            return null;
         }
+    }
 
-        return null;
+    public static function latLngCoordinatesFromDegreesString($latLonString)
+    {
+        $regex  = '#^((([NSEWO]{0,1})\s*([-|\+]{0,1}\d{1,3}([.,]\d+)*)[^0-9.,NSEWO]*([NSEWO]{0,1}))';
+        $regex .=   '[\s;,]+';
+        $regex .=   '(([NSEWO]{0,1})\s*([-|\+]{0,1}\d{1,3}([.,]\d+)*)[^0-9.,NSEWO]*([NSEWO]{0,1})))#u';
+
+        $latitude  = null;
+        $longitude = null;
+
+        if (preg_match($regex, $latLonString, $matches)) {
+            $degrees = (float)str_replace(',', '.', $matches[4]);
+            $heading = empty($matches[3]) ? $matches[6] : $matches[3];
+            $heading = str_replace('O', 'E', $heading);
+
+            $firstCoord = self::decimalFromDegreesMinutesSeconds($degrees, 0, 0, $heading);
+
+            if ($firstCoord['type'] == null || $firstCoord['type'] == 'latitude') {
+                $latitude  = $firstCoord['decimal'];
+            } else {
+                $longitude = $firstCoord['decimal'];
+            }
+
+            $degrees = str_replace(',', '.', $matches[9]);
+            $heading = empty($matches[8]) ?  (empty($matches[11]) ? $matches[6] : $matches[11]) : $matches[8];
+            $heading = str_replace('O', 'E', $heading);
+
+            $secondCoord  = self::decimalFromDegreesMinutesSeconds($degrees, 0, 0, $heading);
+
+            if ($secondCoord['type'] == 'latitude') {
+                $latitude = $secondCoord['decimal'];
+            } else {
+                $longitude = $secondCoord['decimal'];
+            }
+
+            return (object)['latitude' => $latitude, 'longitude' => $longitude];
+        } else {
+            return null;
+        }
     }
 
     public static function decimalFromDegreesMinutesSeconds($degrees, $minutes, $seconds, $heading)
     {
+        $sign      = ($degrees < 0) ? -1 : 1;
+        $degrees   = abs($degrees);
         $seconds   = ($seconds / 60);
         $minutes   = ($minutes + $seconds);
         $minutes   = ($minutes / 60);
         $decimal   = ($degrees + $minutes);
 
-        if (('S' == $heading) || ('W' == $heading)) {
+        if (('S' == $heading)) {
             $decimal = -1 * $decimal;
+            $heading = 'N';
+        }
+
+        if (('W' == $heading)) {
+            $decimal = -1 * $decimal;
+            $heading = 'E';
+        }
+
+        $decimal = $sign * $decimal;
+
+        if ('N' == $heading) {
+            $type = 'latitude';
+        } elseif ('E' == $heading) {
+            $type = 'longitude';
+        } else {
+            // unknown
+            $type = null;
         }
 
         return ['decimal' => $decimal,
-                'type'    => ($heading == 'N' || $heading == 'S') ? 'latitude' : 'longitude'];
+                'type'    => $type];
       }
 }
