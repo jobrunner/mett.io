@@ -1,9 +1,9 @@
 <?php
 namespace Mett;
 
-use Mett\Coder\Base62;
-use Mett\Coder\CoderInterface;
-use Mett\Rand\GeneratorInterface;
+use \Mett\Coder\Base62;
+use \Mett\Coder\CoderInterface;
+use \Mett\Rand\GeneratorInterface;
 use \Mett\Rand\DevUrandomGenerator as Generator;
 
 /**
