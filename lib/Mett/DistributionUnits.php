@@ -25,7 +25,6 @@ class DistributionUnits
 
     public static function split($distributionString)
     {
-        # E: AU LU PL(?) SK SP SZ N: AG MO
         return preg_split(
               "/"
                # level 2 "free text". E.g. E: "Caucasus"
