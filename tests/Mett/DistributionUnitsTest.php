@@ -41,6 +41,33 @@ class DistributionUnitsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Special case: E: "Patria ignota" means patria unknown but in Europe.
+     * Must result in a "E: PIG".
+     *
+     * @group distributionPatriaIgnota
+     * @group distributionUnit
+     */
+    public function testCasePatriaIgnota_4()
+    {
+        $distributionString = 'E: "Patria ignota"';
+        $distributionString = DistributionUnits::filterPatriaIgnota($distributionString);
+
+        $this->assertEquals('E: "Patria ignota"', $distributionString);
+    }
+
+    /**
+     * @group distributionTokenize
+     * @group distributionUnit
+     */
+    public function testCaseSplit_0()
+    {
+        $distributionString = 'E: "Patria ignota"';
+        $tokens             = DistributionUnits::split($distributionString);
+
+        $this->assertSame(['E:', 'Patria ignota'], $tokens);
+    }
+
+    /**
      * @group distributionTokenize
      * @group distributionUnit
      */
@@ -122,6 +149,18 @@ class DistributionUnitsTest extends PHPUnit_Framework_TestCase
         $tokens             = DistributionUnits::split($distributionString);
 
         $this->assertSame(['E:','AU','LU','PL(?)','SK','SP','SZ','N:','AG','MO'], $tokens);
+    }
+
+    /**
+     * @group distributionTokenize
+     * @group distributionUnit
+     */
+    public function testCaseSplit_8()
+    {
+        $distributionString = 'E: PIG';
+        $tokens             = DistributionUnits::split($distributionString);
+
+        $this->assertSame(['E:','PIG'], $tokens);
     }
 
     /**
@@ -238,9 +277,46 @@ class DistributionUnitsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @group distributionTokenize
      * @group distributionUnit
      */
-    public function testCaseUnitsPatriaIgnota()
+    public function testCaseTokenize_2()
+    {
+        $distributionString = 'E: "Caucasus"';
+        $tokens             = DistributionUnits::tokenize($distributionString);
+
+        $expected = [
+            0  => [
+                'token'      => 'PAL',
+                'text'       => null,
+                'level'      => 0,
+                'introduced' => false,
+                'doubtful'   => false,
+            ],
+            1  => [
+                'token'      => 'E',
+                'text'       => null,
+                'level'      => 1,
+                'introduced' => false,
+                'doubtful'   => false,
+            ],
+            2  => [
+                'token'      => null,
+                'text'       => 'Caucasus',
+                'level'      => 2,
+                'introduced' => false,
+                'doubtful'   => false,
+            ]
+        ];
+
+        $this->assertSame($expected, $tokens);
+    }
+
+
+    /**
+     * @group distributionUnit
+     */
+    public function testCaseUnitsPatriaIgnota_1()
     {
         $taxonId         = 'blablubbid';
         $recordSource    = 'lsbd8:356';
@@ -267,6 +343,50 @@ class DistributionUnitsTest extends PHPUnit_Framework_TestCase
 
         $this->assertSame($unit->level2, null);
         $this->assertSame($unit->level2text, null);
+        $this->assertFalse($unit->level2introduced);
+        $this->assertFalse($unit->level2doubtful);
+
+        $this->assertSame($unit->level3, null);
+        $this->assertSame($unit->level3text, null);
+        $this->assertFalse($unit->level1introduced);
+        $this->assertFalse($unit->level1doubtful);
+
+        $this->assertSame($unit->taxonId, $taxonId);
+        $this->assertSame($unit->recordSource, $recordSource);
+        $this->assertSame($unit->created, $created);
+        $this->assertSame($unit->createdByUserId, $createdByUserId);
+    }
+
+    /**
+     * @group distributionUnit
+     */
+    public function testCaseUnitsPatriaIgnota_2()
+    {
+        $taxonId         = 'blablubbid';
+        $recordSource    = 'lsbd8:356';
+        $created         = "2015-08-27 12:14:45";
+        $createdByUserId = 2;
+        $reference       = [
+            'taxonId'         => $taxonId,
+            'recordSource'    => $recordSource,
+            'created'         => $created,
+            'createdByUserId' => $createdByUserId
+        ];
+        $distributionString = 'E: "Patria ignota"';
+
+        $units              = new DistributionUnits($reference, $distributionString);
+
+        $unit = $units->distributions[0];
+        $this->assertEquals($unit->level0, 'PAL');
+        $this->assertFalse($unit->level0introduced);
+        $this->assertFalse($unit->level0doubtful);
+
+        $this->assertSame($unit->level1, 'E');
+        $this->assertFalse($unit->level1introduced);
+        $this->assertFalse($unit->level1doubtful);
+
+        $this->assertSame($unit->level2, null);
+        $this->assertSame($unit->level2text, 'Patria ignota');
         $this->assertFalse($unit->level2introduced);
         $this->assertFalse($unit->level2doubtful);
 

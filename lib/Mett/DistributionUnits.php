@@ -15,12 +15,11 @@ class DistributionUnits
      */
     public static function filterPatriaIgnota($distributionString)
     {
-        return str_ireplace([
-            '"PATRIA IGNOTA"',
-            'PATRIA IGNOTA',
-            '"DISTR. UNKNOWN"',
-            'DISTR. UNKNOWN'
-        ], 'PIG', $distributionString);
+        return preg_replace(
+            '/^("PATRIA IGNOTA"|PATRIA IGNOTA|"DISTR. UNKNOWN"|DISTR. UNKNOWN)/i',
+            'PIG',
+            $distributionString
+        );
     }
 
     public static function split($distributionString)
@@ -123,7 +122,7 @@ class DistributionUnits
 
                 // Parse free text level 2 distribution that can be determined
                 // E.g. 'Caucasus' or 'Caucasus (?)'
-                } elseif (preg_match('/^([^(]+)(\(\?\))$/', $token, $matches)) {
+                } elseif (preg_match('/^([^(]+)(\(\?\)){0,1}$/', $token, $matches)) {
                     $level    = 2;
                     $token    = null;
                     $text     = trim($matches[1]);
