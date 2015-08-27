@@ -2,16 +2,8 @@
 
 use \Mett\DistributionUnit;
 
-class TaxonDistributionUnitTest extends PHPUnit_Framework_TestCase
+class DistributionUnitTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @group distributionUnit
-     */
-//    public function testCaseAttributes()
-//    {
-//        $this->markTestSkipped('Test attributes');
-//    }
-
     /**
      * @group distributionUnit
      */
