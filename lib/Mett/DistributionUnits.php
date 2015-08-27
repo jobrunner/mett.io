@@ -6,6 +6,13 @@ class DistributionUnits
 {
     public $distributions = [];
 
+    /**
+     * Replaces occurrences of Patria ignota at the beginning of a string with PIG
+     *
+     * @param $distributionString
+     *
+     * @return mixed
+     */
     public static function filterPatriaIgnota($distributionString)
     {
         return str_ireplace([
@@ -21,7 +28,7 @@ class DistributionUnits
         # E: AU LU PL(?) SK SP SZ N: AG MO
         return preg_split(
               "/"
-               # level 2 "free text". E.g. E: "Caucasus" (übrigens die TDWG-Region:
+               # level 2 "free text". E.g. E: "Caucasus"
                # Return value WITHOUT quotes!
             . '\s*\"([^\"]+)\"\s*'
             . '|'
