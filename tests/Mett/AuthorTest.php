@@ -288,4 +288,47 @@ class AuthorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Zhang', $author->familyName);
         $this->assertEquals('R.-Zh.', $author->givenName);
     }
+
+    /**
+     * @group author
+     */
+    public function testAlteranteNames_1()
+    {
+        $authorString = 'Fuss C. [= K.]';
+        $author       = Author::initWithString($authorString);
+
+        $this->assertEquals('Fuss', $author->familyName);
+        $this->assertEquals('C.', $author->givenName);
+
+        $this->assertNull($author->altFamilyName);
+        $this->assertEquals('K.', $author->altGivenName);
+    }
+
+    /**
+     * @group author
+     */
+    public function testAlteranteNames_2()
+    {
+        $authorString = 'Iablokoff-Khnzorian [= Khnzorian] S. M.';
+        $author       = Author::initWithString($authorString);
+
+        $this->assertEquals('Iablokoff-Khnzorian', $author->familyName);
+        $this->assertEquals('S. M.', $author->givenName);
+        $this->assertEquals('Khnzorian', $author->altFamilyName);
+        $this->assertEquals(null, $author->altGivenName);
+    }
+
+    /**
+     * @group author
+     */
+    public function testAlteranteNames_3()
+    {
+        $authorString = 'Rosenschoeld [= Rosenschöld] E. M.';
+        $author = Author::initWithString($authorString);
+
+        $this->assertEquals('Rosenschoeld', $author->familyName);
+        $this->assertEquals('E. M.', $author->givenName);
+        $this->assertEquals('Rosenschöld', $author->altFamilyName);
+        $this->assertEquals(null, $author->altGivenName);
+    }
 }
