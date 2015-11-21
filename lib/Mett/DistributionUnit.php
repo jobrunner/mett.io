@@ -11,7 +11,7 @@ class DistributionUnit
     public $createdByUserId  = null;
 
     public $level0introduced = false;
-    public $level0           = 'PAL';
+    public $level0           = null;
     public $level0doubtful   = false;
 
     public $level1introduced = false;
