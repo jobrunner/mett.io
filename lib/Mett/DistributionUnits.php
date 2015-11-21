@@ -32,7 +32,7 @@ class DistributionUnits
             . '|'
                # level 3 (additional free text to level 2).
                # Result value is WITH brackets to distinguish the previous case
-            . '\s*(\([^?]+\))\s*'
+            . '\s*(\([^?)]+\))\s*'
             . '|'
             . '\s+'
             . '/',
@@ -45,7 +45,7 @@ class DistributionUnits
     {
         $distributionString = static::filterPatriaIgnota($distributionString);
         $tokens             = static::split($distributionString);
-        $tokenized = [];
+        $tokenized          = [];
 
         foreach ($tokens as $token) {
 
@@ -133,11 +133,11 @@ class DistributionUnits
             }
 
             $tokenized[] = [
-                'token' => $token,
-                'text'  => $text,
-                'level' => $level,
+                'token'      => $token,
+                'text'       => $text,
+                'level'      => $level,
                 'introduced' => $introduced,
-                'doubtful' => $doubtful
+                'doubtful'   => $doubtful
             ];
         }
 
@@ -153,13 +153,13 @@ class DistributionUnits
         $token  = array_shift($tokens);
 
         while (!empty($token)) {
-            $unit->{"level" . $token['level']}  = $token['token'];
-            $unit->{"level" . $token['level'] . "text"}  = $token['text'];
+            $unit->{"level" . $token['level']}                = $token['token'];
+            $unit->{"level" . $token['level'] . "text"}       = $token['text'];
             $unit->{"level" . $token['level'] . "introduced"} = $token['introduced'];
-            $unit->{"level" . $token['level'] . "doubtful"} = $token['doubtful'];
+            $unit->{"level" . $token['level'] . "doubtful"}   = $token['doubtful'];
 
             $lastLevel = $token['level'];
-            $token = array_shift($tokens);
+            $token     = array_shift($tokens);
 
             if ($lastLevel == $token['level']) {
                 $units[] = $unit;
@@ -167,8 +167,14 @@ class DistributionUnits
             }
 
             if ($lastLevel > $token['level']) {
-                $units[]       = $unit;
-                $unit          = new DistributionUnit($reference);
+                $units[] = $unit;
+
+                if ($token['level'] == 2) {
+                    $reference['level0'] = $unit->level0;
+                    $reference['level1'] = $unit->level1;
+                }
+
+                $unit    = new DistributionUnit($reference);
             }
         }
 

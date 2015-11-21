@@ -167,6 +167,18 @@ class DistributionUnitsTest extends PHPUnit_Framework_TestCase
      * @group distributionTokenize
      * @group distributionUnit
      */
+    public function testCaseSplit_9()
+    {
+        $distributionString = 'E: CT (Kaliningrad) CI (La Gomera) N: AG';
+        $tokens             = DistributionUnits::split($distributionString);
+
+        $this->assertSame(['E:','CT','(Kaliningrad)','CI','(La Gomera)','N:','AG'], $tokens);
+    }
+
+    /**
+     * @group distributionTokenize
+     * @group distributionUnit
+     */
     public function testCaseTokenize_1()
     {
         $distributionString = 'E: "Caucasus (?)" PL(?) A: INi UZ N: CI (Gomera, La Palma) COS';
@@ -566,4 +578,134 @@ class DistributionUnitsTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($unit->level1introduced);
         $this->assertFalse($unit->level1doubtful);
     }
+
+
+    /**
+     * @group distributionUnit
+     * @group BugWithBrakets
+     */
+    public function testCaseUnitsNotSimpleBugWithBrakets()
+    {
+        $taxonId         = 'blablubbid';
+        $recordSource    = 'lsbd8:386';
+        $created         = "2015-08-27 12:14:45";
+        $createdByUserId = 2;
+        $reference       = [
+            'taxonId'         => $taxonId,
+            'recordSource'    => $recordSource,
+            'created'         => $created,
+            'createdByUserId' => $createdByUserId
+        ];
+
+        $distributionString = 'E: AZi CT (Kaliningrad) CZ (Bla blubb) N: AG A: AF';
+        $units              = new DistributionUnits($reference, $distributionString);
+
+        ## [PAL] E: AZi
+        $unit = $units->distributions[0];
+        $this->assertEquals($unit->level0, 'PAL');
+        $this->assertFalse($unit->level0introduced);
+        $this->assertFalse($unit->level0doubtful);
+
+        $this->assertSame($unit->level1, 'E');
+        $this->assertFalse($unit->level1introduced);
+        $this->assertFalse($unit->level1doubtful);
+
+        $this->assertSame($unit->level2, 'AZ');
+        $this->assertSame($unit->level2text, null);
+        $this->assertTrue($unit->level2introduced);
+        $this->assertFalse($unit->level2doubtful);
+
+        $this->assertSame($unit->level3, null);
+        $this->assertSame($unit->level3text, null);
+        $this->assertFalse($unit->level1introduced);
+        $this->assertFalse($unit->level1doubtful);
+
+        $this->assertSame($unit->taxonId, $taxonId);
+        $this->assertSame($unit->recordSource, $recordSource);
+        $this->assertSame($unit->created, $created);
+        $this->assertSame($unit->createdByUserId, $createdByUserId);
+
+        # [PAL E:] CT (Kaliningrad)
+        $unit = $units->distributions[1];
+        $this->assertEquals($unit->level0, 'PAL');
+        $this->assertFalse($unit->level0introduced);
+        $this->assertFalse($unit->level0doubtful);
+
+        $this->assertSame($unit->level1, 'E');
+        $this->assertFalse($unit->level1introduced);
+        $this->assertFalse($unit->level1doubtful);
+
+        $this->assertSame($unit->level2, 'CT');
+        $this->assertSame($unit->level2text, null);
+        $this->assertFalse($unit->level2introduced);
+        $this->assertFalse($unit->level2doubtful);
+
+        $this->assertSame($unit->level3, null);
+        $this->assertSame($unit->level3text, 'Kaliningrad');
+        $this->assertFalse($unit->level1introduced);
+        $this->assertFalse($unit->level1doubtful);
+
+        # [PAL E:] CZ (Bla blubb)
+        $unit = $units->distributions[2];
+        $this->assertEquals($unit->level0, 'PAL');
+        $this->assertFalse($unit->level0introduced);
+        $this->assertFalse($unit->level0doubtful);
+
+        $this->assertSame($unit->level1, 'E');
+        $this->assertFalse($unit->level1introduced);
+        $this->assertFalse($unit->level1doubtful);
+
+        $this->assertSame($unit->level2, 'CZ');
+        $this->assertSame($unit->level2text, null);
+        $this->assertFalse($unit->level2introduced);
+        $this->assertFalse($unit->level2doubtful);
+
+        $this->assertSame($unit->level3, null);
+        $this->assertSame($unit->level3text, 'Bla blubb');
+        $this->assertFalse($unit->level1introduced);
+        $this->assertFalse($unit->level1doubtful);
+
+//        return;
+
+        # [PAL] N: AG
+        $unit = $units->distributions[3];
+        $this->assertEquals($unit->level0, 'PAL');
+        $this->assertFalse($unit->level0introduced);
+        $this->assertFalse($unit->level0doubtful);
+
+        $this->assertSame($unit->level1, 'N');
+        $this->assertFalse($unit->level1introduced);
+        $this->assertFalse($unit->level1doubtful);
+
+        $this->assertSame($unit->level2, 'AG');
+        $this->assertSame($unit->level2text, null);
+        $this->assertFalse($unit->level2introduced);
+        $this->assertFalse($unit->level2doubtful);
+
+        $this->assertSame($unit->level3, null);
+        $this->assertSame($unit->level3text, null);
+        $this->assertFalse($unit->level1introduced);
+        $this->assertFalse($unit->level1doubtful);
+
+        # [PAL] A: AF
+        $unit = $units->distributions[4];
+        $this->assertEquals($unit->level0, 'PAL');
+        $this->assertFalse($unit->level0introduced);
+        $this->assertFalse($unit->level0doubtful);
+
+        $this->assertSame($unit->level1, 'A');
+        $this->assertFalse($unit->level1introduced);
+        $this->assertFalse($unit->level1doubtful);
+
+        $this->assertSame($unit->level2, 'AF');
+        $this->assertSame($unit->level2text, null);
+        $this->assertFalse($unit->level2introduced);
+        $this->assertFalse($unit->level2doubtful);
+
+        $this->assertSame($unit->level3, null);
+        $this->assertSame($unit->level3text, null);
+        $this->assertFalse($unit->level1introduced);
+        $this->assertFalse($unit->level1doubtful);
+   }
+
 }
