@@ -3,12 +3,10 @@ php:
   - 5.6
   - 5.5
   - 5.4
-  - hhvm
 
 before_script:
   - wget http://getcomposer.org/composer.phar
   - php composer.phar install
-  - php composer.phar self-update
   - phpunit
 
 script: phpunit --configuration phpunit.xml --coverage-html tests/report
