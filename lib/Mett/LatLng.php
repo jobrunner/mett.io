@@ -41,6 +41,7 @@ class LatLng
         $this->datum     = $datum;
     }
 
+    
     /**
      * Very basic latitude validation.
      *
@@ -57,6 +58,7 @@ class LatLng
 
         throw new \Exception("Not a valid latitude $latitude");
     }
+
 
     /**
      * Very basic longitude validation.
@@ -365,6 +367,7 @@ class LatLng
                 'type'    => $type];
     }
 
+
     /**
      * Temporary implementation of a MGRS to Latitude/Longitude coordinate transformation.
      *
@@ -433,6 +436,7 @@ class LatLng
 
         return self::_utmToLatLng($e + $easting, $n + $northing, $zoneLetter, $zoneNumber);
     }
+
 
     /**
      * Temporary implementation of a UTM to Latitude/Longitude coordinate transformation.
