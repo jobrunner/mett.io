@@ -197,7 +197,6 @@ class LatLng
             $longitude = $coord['decimal'];
         }
 
-
         $degrees    = $matches[9];
         $minutes    = str_replace(',', '.', $matches[10]);
         $heading    = empty($matches[8]) ?  (empty($matches[12]) ? $matches[6] : $matches[12]) : $matches[8];
@@ -233,7 +232,6 @@ class LatLng
             return null;
         }
 
-
         $latitude   = null;
         $longitude  = null;
         $degrees    = (float)str_replace(',', '.', $matches[4]);
@@ -246,7 +244,6 @@ class LatLng
         } else {
             $longitude = $coord['decimal'];
         }
-
 
         $degrees    = str_replace(',', '.', $matches[9]);
         $heading    = empty($matches[8]) ?  (empty($matches[11]) ? $matches[6] : $matches[11]) : $matches[8];
