@@ -21,7 +21,7 @@ class Author
      *
      * @param $authorString
      *
-     * @return \Mett\Author
+     * @return Author
      */
     public static function initWithString($authorString)
     {
@@ -29,16 +29,18 @@ class Author
         $givenName     = null;
         $altFamilyName = null;
         $altGivenName  = null;
-
         $alternativeName = null;
 
+        // If an alternative spelling is given it will be removed from family and given names
+        // and separately stored into alternative family and given names.
         if (preg_match('/\[=\s+([^\]]+)\]/u', $authorString, $matches)) {
             $alternativeName = trim($matches[1]);
 
-            // remove alternate name from authorString
+            // remove alternative name from authorString
             $authorString    = trim(preg_replace('/\[=\s+([^\]]+)\]/u', '', $authorString));
 
-            // decide whether alternative is a given name. If not it will be treated as family name
+            // decide whether alternative name is an alternative given name.
+            // If it is not, it will be treated as alternative family name.
             if (preg_match('/^((?:-{0,1}[A-Z][a-z]{0,1}\.)*)$/u', $alternativeName, $altMatches)) {
                 $altGivenName  = $alternativeName;
             } else {
@@ -61,7 +63,6 @@ class Author
             'fullGivenName' => null,
             'altFamilyName' => $altFamilyName,
             'altGivenName'  => $altGivenName,
-            'alt' => $alternativeName,
         ]));
     }
 }
