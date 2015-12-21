@@ -1,5 +1,5 @@
 <?php
-namespace Mett;
+namespace Mett\Citation;
 
 use Mett\Citation\Formatter\FormatterInterface;
 
@@ -43,10 +43,10 @@ class Author
      */
     public static function initWithString($authorString)
     {
-        $familyName    = null;
-        $givenName     = null;
-        $altFamilyName = null;
-        $altGivenName  = null;
+        $familyName      = null;
+        $givenName       = null;
+        $altFamilyName   = null;
+        $altGivenName    = null;
         $alternativeName = null;
 
         // First of all, make an assumption that the author is given as <family name>, <given name>

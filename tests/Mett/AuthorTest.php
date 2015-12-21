@@ -1,6 +1,6 @@
 <?php
 
-use \Mett\Author;
+use \Mett\Citation\Author;
 
 class AuthorTest extends PHPUnit_Framework_TestCase
 {
@@ -14,8 +14,8 @@ class AuthorTest extends PHPUnit_Framework_TestCase
         $author = Author::initWithString($authorString);
 
         $this->assertTrue($author instanceof Author);
-        $this->assertClassHasAttribute('familyName', '\mett\Author');
-        $this->assertClassHasAttribute('givenName', '\mett\Author');
+        $this->assertClassHasAttribute('familyName', '\mett\Citation\Author');
+        $this->assertClassHasAttribute('givenName', '\mett\Citation\Author');
         $this->assertEquals('Tournier', $author->familyName);
         $this->assertEquals('', $author->givenName);
     }
