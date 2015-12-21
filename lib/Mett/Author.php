@@ -16,8 +16,13 @@ class Author
         }
     }
 
+
     /**
+     * Init an Author instance with standard author format:
+     * <family name>, <given name as initials or mixed with full given name and/or initials> or
      * <familyName> [<initial>.[-], ...]
+     * Either <family name> or <given name> may have an alternative spelling in the
+     * form [= <alternative name or initials>]
      *
      * @param $authorString
      *
@@ -30,6 +35,31 @@ class Author
         $altFamilyName = null;
         $altGivenName  = null;
         $alternativeName = null;
+
+        // First of all, make an assumption that the author is given as <family name>, <given name>
+        if (preg_match('/^([^,]+),(.*)$/u', $authorString, $matches)) {
+            $familyName = trim($matches[1]);
+
+            if (preg_match('/\[=\s+([^\]]+)\]/u', $familyName, $altFamilyNameMatches)) {
+                $altFamilyName = trim($altFamilyNameMatches[1]);
+                $familyName    = trim(preg_replace('/\[=\s+([^\]]+)\]/u', '', $familyName));
+            }
+
+            $givenName  = trim($matches[2]);
+
+            if (preg_match('/\[=\s+([^\]]+)\]/u', $givenName, $altGivenNameMatches)) {
+                $altGivenName = trim($altGivenNameMatches[1]);
+                $givenName    = trim(preg_replace('/\[=\s+([^\]]+)\]/u', '', $givenName));
+            }
+
+            return (new self([
+                'familyName'    => $familyName,
+                'givenName'     => $givenName,
+                'altFamilyName' => $altFamilyName,
+                'altGivenName'  => $altGivenName,
+            ]));
+        }
+
 
         // If an alternative spelling is given it will be removed from family and given names
         // and separately stored into alternative family and given names.

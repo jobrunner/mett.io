@@ -331,4 +331,45 @@ class AuthorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Rosenschöld', $author->altFamilyName);
         $this->assertEquals(null, $author->altGivenName);
     }
+
+    /**
+     * @group author
+     */
+    public function testStandardName_1()
+    {
+        $authorString = 'Rosenschöld, E. M.';
+        $author       = Author::initWithString($authorString);
+
+        $this->assertEquals('Rosenschöld', $author->familyName);
+        $this->assertEquals('E. M.', $author->givenName);
+    }
+
+    /**
+     * @group author
+     */
+    public function testStandardName_2()
+    {
+        $authorString = 'Rosenschoeld [= Rosenschöld], E. M.';
+        $author       = Author::initWithString($authorString);
+
+        $this->assertEquals('Rosenschoeld', $author->familyName);
+        $this->assertEquals('E. M.', $author->givenName);
+        $this->assertEquals('Rosenschöld', $author->altFamilyName);
+        $this->assertEquals(null, $author->altGivenName);
+    }
+
+    /**
+     * @group author
+     */
+    public function testStandardName_3()
+    {
+        $authorString = 'Fuss, C. [= K.]';
+        $author       = Author::initWithString($authorString);
+
+        $this->assertEquals('Fuss', $author->familyName);
+        $this->assertEquals('C.', $author->givenName);
+
+        $this->assertNull($author->altFamilyName);
+        $this->assertEquals('K.', $author->altGivenName);
+    }
 }
