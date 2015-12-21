@@ -1,6 +1,8 @@
 <?php
 namespace Mett;
 
+use Mett\Citation\Formatter\FormatterInterface;
+
 class Author
 {
     public $familyName;
@@ -9,11 +11,22 @@ class Author
     public $altFamilyName;
     public $altGivenName;
 
-    public function __construct(array $defaults = [])
+    protected $_formatter = null;
+
+
+    /**
+     * Constructor
+     *
+     * @param array                   $defaults. Keys of the array should be public properties of the class Author
+     * @param FormatterInterface|null $formatter
+     */
+    public function __construct(array $defaults = [], FormatterInterface $formatter = null)
     {
         foreach ($defaults as $name => $value) {
             $this->{$name} = $value;
         }
+
+        $this->_formatter = $formatter;
     }
 
 
