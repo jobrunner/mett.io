@@ -1,6 +1,7 @@
 <?php
 
-use \Mett\Citation\Author;
+use Mett\Citation\Author;
+use Mett\Citation\Formatter\AuthorFormatter;
 
 class AuthorTest extends PHPUnit_Framework_TestCase
 {
@@ -371,5 +372,85 @@ class AuthorTest extends PHPUnit_Framework_TestCase
 
         $this->assertNull($author->altFamilyName);
         $this->assertEquals('K.', $author->altGivenName);
+    }
+
+    /**
+     * @group author
+     */
+    public function testStandardName_4()
+    {
+        $authorString  = 'Fuss-schnarrenberger, Carl-Friedrich-Peter Amar-Thomas [= Fuss-Schnarchenberger, Karl-Friedrich]';
+        $author       = Author::initWithString($authorString);
+
+        $this->assertEquals('Fuss-schnarrenberger', $author->familyName);
+        $this->assertEquals('Carl-Friedrich-Peter Amar-Thomas', $author->givenName);
+
+        $this->assertEquals('Fuss-Schnarchenberger', $author->altFamilyName);
+        $this->assertEquals('Karl-Friedrich', $author->altGivenName);
+    }
+
+    /**
+     * @group author
+     */
+    public function testStandardName_5()
+    {
+        $authorString  = 'Fuss-schnarrenberger, Carl-Friedrich-Peter Amar-Thomas [= Fuss-Schnarchenberger, Karl-Friedrich]';
+        $author       = Author::initWithString($authorString);
+
+        $this->assertEquals('Fuss-schnarrenberger', $author->familyName);
+        $this->assertEquals('Carl-Friedrich-Peter Amar-Thomas', $author->givenName);
+
+        $this->assertEquals('Fuss-Schnarchenberger', $author->altFamilyName);
+        $this->assertEquals('Karl-Friedrich', $author->altGivenName);
+    }
+
+    /**
+     * @group author
+     */
+    public function testWithAlternativeVariation()
+    {
+        $this->markTestSkipped('Input rules should be defined.');
+
+        // An input format is needed for special rules of given names.
+        $authorString  = 'Fuss-schnarrenberger [= Fuss-Schnarchenberger], Carl-Friedrich-Peter Amar-Thomas [= Karl-Friedrich]';
+        $author       = Author::initWithString($authorString);
+
+        $this->assertEquals('Fuss-schnarrenberger', $author->familyName);
+        $this->assertEquals('Carl-Friedrich-Peter Amar-Thomas', $author->givenName);
+        $this->assertEquals('Fuss-Schnarchenberger', $author->altFamilyName);
+        $this->assertEquals('Karl-Friedrich', $author->altGivenName);
+    }
+
+
+    /**
+     * @group author
+     */
+    public function testCorporateName_1()
+    {
+        $authorString = 'Bundesamt für Landwirtschaft und Forsten,';
+        $author       = Author::initWithString($authorString);
+
+        $this->assertNull($author->familyName);
+        $this->assertNull($author->givenName);
+        $this->assertNull($author->altFamilyName);
+        $this->assertNull($author->altGivenName);
+        $this->assertEquals('Bundesamt für Landwirtschaft und Forsten', $author->corporateName);
+        $this->assertNull($author->altCorporateName);
+    }
+
+    /**
+     * @group author
+     */
+    public function testCorporateName_2()
+    {
+        $authorString = 'Landesamt für Strahlenschäden an der Umwelt, [= Umweltamt für Strahlung,]';
+        $author       = Author::initWithString($authorString);
+
+        $this->assertNull($author->familyName);
+        $this->assertNull($author->givenName);
+        $this->assertNull($author->altFamilyName);
+        $this->assertNull($author->altGivenName);
+        $this->assertEquals('Landesamt für Strahlenschäden an der Umwelt', $author->corporateName);
+        $this->assertEquals('Umweltamt für Strahlung', $author->altCorporateName);
     }
 }
