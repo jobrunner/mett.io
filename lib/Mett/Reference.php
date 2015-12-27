@@ -5,7 +5,7 @@ namespace Mett;
 class Reference
 {
     public $id               = null;
-    public $referenceType    = 0;
+    public $referenceTypeId  = 0;
     public $authors          = null;
     public $year             = null;
     public $title            = null;
@@ -61,7 +61,7 @@ class Reference
     public function getInsertSql()
     {
         $a = sprintf("INSERT IGNORE INTO `reference` (
-    `id`,               `referenceType`,
+    `id`,               `referenceTypeId`,
     `authors`,          `title`,
     `secondaryAuthors`, `secondaryTitle`,
     `tertiaryAuthors`,  `tertiaryTitle`,
@@ -80,7 +80,7 @@ class Reference
     %s, %s,
     %s, %s,
     %s
-);\n", static::e($this->id),                $this->referenceType,
+);\n", static::e($this->id),                $this->referenceTypeId,
        static::e($this->authors),           static::e($this->title),
        static::e($this->secondaryAuthors),  static::e($this->secondaryTitle),
        static::e($this->tertiaryAuthors),   static::e($this->tertiaryTitle),
@@ -114,7 +114,7 @@ class Reference
     {
         return "CREATE TABLE IF NOT EXISTS `reference` (
     `id` varchar(48) NOT NULL,
-    `referenceType` smallint(5) unsigned NOT NULL DEFAULT '0',
+    `referenceTypeId` smallint(5) unsigned NOT NULL DEFAULT '0',
     `authors` mediumtext NOT NULL,
     `year` mediumtext NOT NULL,
     `title` mediumtext NOT NULL,

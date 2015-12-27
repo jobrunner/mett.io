@@ -34,7 +34,7 @@ class ReferenceTest extends PHPUnit_Framework_TestCase
     {
         $expected = "CREATE TABLE IF NOT EXISTS `reference` (
     `id` varchar(48) NOT NULL,
-    `referenceType` smallint(5) unsigned NOT NULL DEFAULT '0',
+    `referenceTypeId` smallint(5) unsigned NOT NULL DEFAULT '0',
     `authors` mediumtext NOT NULL,
     `year` mediumtext NOT NULL,
     `title` mediumtext NOT NULL,
@@ -68,7 +68,7 @@ class ReferenceTest extends PHPUnit_Framework_TestCase
         $createdByUserId = 2;
         $reference       = [
             'id'               => 'blablubbid',
-            'referenceType'    => 7,
+            'referenceTypeId'  => 7,
             'authors'          => "Trýzna, Miloš\nValentine, Barry D.",
             'year'             => "2011",
             'title'            => "Anthribinae",
@@ -88,7 +88,7 @@ class ReferenceTest extends PHPUnit_Framework_TestCase
 
         $unit     = new Reference($reference);
         $expected = "INSERT IGNORE INTO `reference` (
-    `id`,               `referenceType`,
+    `id`,               `referenceTypeId`,
     `authors`,          `title`,
     `secondaryAuthors`, `secondaryTitle`,
     `tertiaryAuthors`,  `tertiaryTitle`,
