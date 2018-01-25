@@ -4,6 +4,8 @@ namespace Mett;
 
 class DistributionUnit
 {
+    public static $tableDistributionUnit = 'distribution_unit';
+
     public $id               = null;
     public $taxonId          = null;
     public $recordSource     = null;
@@ -27,6 +29,7 @@ class DistributionUnit
     public $level3           = null;
     public $level3text       = null;
     public $level3doubtful   = false;
+
 
     /**
      * Constructor
@@ -56,9 +59,10 @@ class DistributionUnit
         }
     }
 
+
     public function getInsertSql()
     {
-        $a = sprintf("INSERT IGNORE INTO `distribution_unit` (
+        $a = sprintf("INSERT IGNORE INTO `%s` (
 id,
 taxonId, recordSource, created, createdByUserId,
 level0, level0introduced, level0doubtful,
@@ -71,6 +75,7 @@ null,
 %s, %u, %u,
 %s, %u, %u, %s,
 %s, %u, %u, %s);\n",
+        static::$tableDistributionUnit,
         static::e($this->taxonId), static::e($this->recordSource), static::e($this->created), $this->createdByUserId,
         static::e($this->level0), $this->level0introduced, $this->level0doubtful,
         static::e($this->level1), $this->level1introduced, $this->level1doubtful,
@@ -80,15 +85,16 @@ null,
         return $a;
     }
 
+
     public static function getDropSql()
     {
-        return "DROP TABLE IF EXISTS `distribution_unit`;\n\n";
+        return sprintf("DROP TABLE IF EXISTS `%s`;\n\n", static::$tableDistributionUnit);
     }
 
 
     public static function getCreateSql()
     {
-        return "CREATE TABLE `distribution_unit` (
+        return sprintf("CREATE TABLE `%s` (
 `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 `taxonId` varchar(48) NOT NULL,
 `recordSource` varchar(20) NOT NULL,
@@ -110,8 +116,6 @@ null,
 `level3doubtful` tinyint(1) NOT NULL DEFAULT '0',
 PRIMARY KEY (`id`),
 KEY `level0` (`level0`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n\n";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n\n", static::$tableDistributionUnit);
     }
-
-
 }
