@@ -4,6 +4,8 @@ namespace Mett;
 
 class TaxonReference
 {
+    public static $tableTaxonReference = 'taxon_reference_e1';
+
     public $taxonId               = null;
     public $referenceId           = null;
 
@@ -45,11 +47,11 @@ class TaxonReference
      */
     public function getInsertSql()
     {
-        $a = sprintf("INSERT IGNORE INTO `taxon_reference` (
+        $a = sprintf("INSERT IGNORE INTO `%s` (
     `taxonId`, `referenceId`
 ) VALUES (
     %s, %s
-);\n", static::e($this->taxonId), static::e($this->referenceId));
+);\n", static::$tableTaxonReference, static::e($this->taxonId), static::e($this->referenceId));
 
         return $a;
     }
@@ -62,7 +64,7 @@ class TaxonReference
      */
     public static function getDropSql()
     {
-        return "DROP TABLE IF EXISTS `taxon_reference`;\n\n";
+        return sprintf("DROP TABLE IF EXISTS `%s`;\n\n", static::$tableTaxonReference);
     }
 
 
@@ -73,10 +75,10 @@ class TaxonReference
      */
     public static function getCreateSql()
     {
-        return "CREATE TABLE IF NOT EXISTS `taxon_reference` (
+        return sprintf("CREATE TABLE IF NOT EXISTS `%s` (
     `taxonId` VARCHAR(48) NOT NULL,
     `referenceId` VARCHAR(48) NOT NULL,
     PRIMARY KEY (`taxonId`, `referenceId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n\n";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n\n", static::$tableTaxonReference);
     }
 }
