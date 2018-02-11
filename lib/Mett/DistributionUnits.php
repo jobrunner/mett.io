@@ -95,7 +95,7 @@ class DistributionUnits
             $divisionN = ['AG','CI','EG','LB','MO','MR','TU'];
             $divisionA = ['AE','AF','AP','BA','BT','CE','CH','CY','ES','FE','HP','IN','IQ','IS','JA','JO','KA','KI','KU','KZ','LE','MG','NE','NC','NO','NP','NW','OM','PA','QA','RU','SA','SC','SD','SE','SI','SW','SY','TD','TM','TR','UP','UZ','WP','WS','YE','AHN','BEI','CHQ','FUJ','GAN','GUA','GUI','GUX','HAI','HEB','HEI','HEN','HKG','HUB','HUN','JIA','JIL','JIX','LIA','MAC','NIN','NMO','QIN','SCH','SHA','SHG','SHN','SHX','TAI','TIA','XIN','XIZ','YUN','ZHE'];
 
-            $countries = array_merge($divisionA, $divisionE, $divisionN);
+            $countries = array_extend($divisionE, $divisionN, $divisionA);
 
             if (in_array($token, $countries)) {
                 $level = 2;
