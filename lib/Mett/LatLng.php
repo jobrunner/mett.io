@@ -434,7 +434,7 @@ class LatLng
             $n += 1000000;
         }
 
-        return self::_utmToLatLng($e + $easting, $n + $northing, $zoneLetter, $zoneNumber);
+        return self::_utmToLatLng($e + (float)$easting, $n + (float)$northing, $zoneLetter, $zoneNumber);
     }
 
 
