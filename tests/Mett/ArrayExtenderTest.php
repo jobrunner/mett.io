@@ -9,10 +9,10 @@ class ArrayExtenderTest extends PHPUnit_Framework_TestCase
         $first    = ['AA', 'AB', 'AC'];
         $second   = ['AD', 'AE'];
         $result   = ArrayExtender::extend($first, $second);
-        $shouldBe = ['AA', 'AB', 'AC', 'AD', 'AE'];
+        $expected = ['AA', 'AB', 'AC', 'AD', 'AE'];
 
-        for ($i = 0; $i < count($shouldBe); $i++) {
-            $this->assertTrue($result[$i] === $shouldBe[$i]);
+        for ($i = 0; $i < count($expected); $i++) {
+            $this->assertTrue($result[$i] === $expected[$i]);
         }
     }
 
@@ -21,10 +21,10 @@ class ArrayExtenderTest extends PHPUnit_Framework_TestCase
         $first    = ['AA', 'AB', 'AC'];
         $second   = ['AD', 'AE'];
         $result   = \Mett\array_extend($first, $second);
-        $shouldBe = ['AA', 'AB', 'AC', 'AD', 'AE'];
+        $expected = ['AA', 'AB', 'AC', 'AD', 'AE'];
 
-        for ($i = 0; $i < count($shouldBe); $i++) {
-            $this->assertTrue($result[$i] === $shouldBe[$i]);
+        for ($i = 0; $i < count($expected); $i++) {
+            $this->assertTrue($result[$i] === $expected[$i]);
         }
     }
 }
