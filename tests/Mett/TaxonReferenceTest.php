@@ -22,7 +22,8 @@ class TaxonReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function testDropSql()
     {
-        $expected = "DROP TABLE IF EXISTS `taxon_reference`;\n\n";
+        TaxonReference::$tableTaxonReference = 'taxon_reference_e42';
+        $expected = "DROP TABLE IF EXISTS `taxon_reference_e42`;\n\n";
 
         $this->assertEquals($expected, TaxonReference::getDropSql());
     }
@@ -32,7 +33,8 @@ class TaxonReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateSql()
     {
-        $expected = "CREATE TABLE IF NOT EXISTS `taxon_reference` (
+        TaxonReference::$tableTaxonReference = 'taxon_reference_e42';
+        $expected = "CREATE TABLE IF NOT EXISTS `taxon_reference_e42` (
     `taxonId` VARCHAR(48) NOT NULL,
     `referenceId` VARCHAR(48) NOT NULL,
     PRIMARY KEY (`taxonId`, `referenceId`)
@@ -54,8 +56,9 @@ class TaxonReferenceTest extends PHPUnit_Framework_TestCase
             'referenceId'      => 'blablubbbla-reference',
         ];
 
+        TaxonReference::$tableTaxonReference = 'taxon_reference_e42';
         $unit     = new TaxonReference($reference);
-        $expected = "INSERT IGNORE INTO `taxon_reference` (
+        $expected = "INSERT IGNORE INTO `taxon_reference_e42` (
     `taxonId`, `referenceId`
 ) VALUES (
     'blablubbid-taxon', 'blablubbbla-reference'
