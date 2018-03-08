@@ -4,6 +4,8 @@ namespace Mett;
 
 class Reference
 {
+    public static $tableReference = 'reference';
+
     public $id               = null;
     public $referenceTypeId  = 0;
     public $authors          = null;
@@ -60,7 +62,7 @@ class Reference
      */
     public function getInsertSql()
     {
-        $a = sprintf("INSERT IGNORE INTO `reference` (
+        $a = sprintf("INSERT IGNORE INTO `%s` (
     `id`,               `referenceTypeId`,
     `authors`,          `title`,
     `secondaryAuthors`, `secondaryTitle`,
@@ -80,7 +82,8 @@ class Reference
     %s, %s,
     %s, %s,
     %s
-);\n", static::e($this->id),                $this->referenceTypeId,
+);\n", static::$tableReference,
+       static::e($this->id),                $this->referenceTypeId,
        static::e($this->authors),           static::e($this->title),
        static::e($this->secondaryAuthors),  static::e($this->secondaryTitle),
        static::e($this->tertiaryAuthors),   static::e($this->tertiaryTitle),
@@ -101,7 +104,7 @@ class Reference
      */
     public static function getDropSql()
     {
-        return "DROP TABLE IF EXISTS `reference`;\n\n";
+        return sprintf("DROP TABLE IF EXISTS `%s`;\n\n", static::$tableReference);
     }
 
 
@@ -112,7 +115,7 @@ class Reference
      */
     public static function getCreateSql()
     {
-        return "CREATE TABLE IF NOT EXISTS `reference` (
+        return sprintf("CREATE TABLE IF NOT EXISTS `%s` (
     `id` varchar(48) NOT NULL,
     `referenceTypeId` smallint(5) unsigned NOT NULL DEFAULT '0',
     `authors` mediumtext NOT NULL,
@@ -131,6 +134,6 @@ class Reference
     `publisher` mediumtext NOT NULL,
     `isbn` mediumtext NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n\n";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n\n", static::$tableReference);
     }
 }
