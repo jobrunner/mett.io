@@ -8,6 +8,7 @@ class TaxonReference
 
     public $taxonId               = null;
     public $referenceId           = null;
+    public $referenceType         = null;
 
 
     /**
@@ -48,10 +49,13 @@ class TaxonReference
     public function getInsertSql()
     {
         $a = sprintf("INSERT IGNORE INTO `%s` (
-    `taxonId`, `referenceId`
+    `taxonId`, `referenceId`, `referenceType`
 ) VALUES (
     %s, %s
-);\n", static::$tableTaxonReference, static::e($this->taxonId), static::e($this->referenceId));
+);\n", static::$tableTaxonReference,
+       static::e($this->taxonId),
+       static::e($this->referenceId),
+       static::e($this->referenceType));
 
         return $a;
     }
@@ -78,6 +82,7 @@ class TaxonReference
         return sprintf("CREATE TABLE IF NOT EXISTS `%s` (
     `taxonId` VARCHAR(48) NOT NULL,
     `referenceId` VARCHAR(48) NOT NULL,
+    `referenceType` TINYINT(4) NOT NULL,
     PRIMARY KEY (`taxonId`, `referenceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n\n", static::$tableTaxonReference);
     }
