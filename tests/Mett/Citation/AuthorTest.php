@@ -380,7 +380,7 @@ class AuthorTest extends PHPUnit_Framework_TestCase
     public function testStandardName_4()
     {
         $authorString  = 'Fuss-schnarrenberger, Carl-Friedrich-Peter Amar-Thomas [= Fuss-Schnarchenberger, Karl-Friedrich]';
-        $author       = Author::initWithString($authorString);
+        $author        = Author::initWithString($authorString);
 
         $this->assertEquals('Fuss-schnarrenberger', $author->familyName);
         $this->assertEquals('Carl-Friedrich-Peter Amar-Thomas', $author->givenName);
@@ -395,7 +395,7 @@ class AuthorTest extends PHPUnit_Framework_TestCase
     public function testStandardName_5()
     {
         $authorString  = 'Fuss-schnarrenberger, Carl-Friedrich-Peter Amar-Thomas [= Fuss-Schnarchenberger, Karl-Friedrich]';
-        $author       = Author::initWithString($authorString);
+        $author        = Author::initWithString($authorString);
 
         $this->assertEquals('Fuss-schnarrenberger', $author->familyName);
         $this->assertEquals('Carl-Friedrich-Peter Amar-Thomas', $author->givenName);
