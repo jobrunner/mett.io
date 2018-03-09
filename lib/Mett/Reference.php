@@ -50,7 +50,7 @@ class Reference
         if (empty($value)) {
             return "NULL";
         } else {
-            return sprintf("'%s'", $value);
+            return sprintf("'%s'", addslashes($value));
         }
     }
 
