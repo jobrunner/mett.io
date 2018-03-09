@@ -36,7 +36,7 @@ class TaxonReference
         if (empty($value)) {
             return "NULL";
         } else {
-            return sprintf("'%s'", $value);
+            return sprintf("'%s'", addslashes($value));
         }
     }
 
@@ -51,11 +51,11 @@ class TaxonReference
         $a = sprintf("INSERT IGNORE INTO `%s` (
     `taxonId`, `referenceId`, `referenceType`
 ) VALUES (
-    %s, %s
+    %s, %s, %d
 );\n", static::$tableTaxonReference,
        static::e($this->taxonId),
        static::e($this->referenceId),
-       static::e($this->referenceType));
+       $this->referenceType);
 
         return $a;
     }

@@ -22,7 +22,19 @@ class ReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function testDropSql()
     {
+        Reference::$tableReference = 'reference';
         $expected = "DROP TABLE IF EXISTS `reference`;\n\n";
+
+        $this->assertEquals($expected, Reference::getDropSql());
+    }
+
+    /**
+     * @group reference
+     */
+    public function testDropSql2()
+    {
+        Reference::$tableReference = 'reference_ed42';
+        $expected = "DROP TABLE IF EXISTS `reference_ed42`;\n\n";
 
         $this->assertEquals($expected, Reference::getDropSql());
     }
@@ -32,7 +44,9 @@ class ReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateSql()
     {
-        $expected = "CREATE TABLE IF NOT EXISTS `reference` (
+        Reference::$tableReference = 'reference_ed43';
+
+        $expected = "CREATE TABLE IF NOT EXISTS `reference_ed43` (
     `id` varchar(48) NOT NULL,
     `referenceTypeId` smallint(5) unsigned NOT NULL DEFAULT '0',
     `authors` mediumtext NOT NULL,
@@ -64,6 +78,7 @@ class ReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function testInsertSql()
     {
+        Reference::$tableReference = 'reference_ed23';
         $created         = "2015-08-27 12:14:45";
         $createdByUserId = 2;
         $reference       = [
@@ -87,7 +102,7 @@ class ReferenceTest extends PHPUnit_Framework_TestCase
         ];
 
         $unit     = new Reference($reference);
-        $expected = "INSERT IGNORE INTO `reference` (
+        $expected = "INSERT IGNORE INTO `reference_ed23` (
     `id`,               `referenceTypeId`,
     `authors`,          `title`,
     `secondaryAuthors`, `secondaryTitle`,

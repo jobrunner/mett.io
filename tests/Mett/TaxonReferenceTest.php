@@ -37,6 +37,7 @@ class TaxonReferenceTest extends PHPUnit_Framework_TestCase
         $expected = "CREATE TABLE IF NOT EXISTS `taxon_reference_e42` (
     `taxonId` VARCHAR(48) NOT NULL,
     `referenceId` VARCHAR(48) NOT NULL,
+    `referenceType` TINYINT(4) NOT NULL,
     PRIMARY KEY (`taxonId`, `referenceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -54,16 +55,41 @@ class TaxonReferenceTest extends PHPUnit_Framework_TestCase
         $reference       = [
             'taxonId'          => 'blablubbid-taxon',
             'referenceId'      => 'blablubbbla-reference',
+            'referenceType'    => 23,
         ];
 
         TaxonReference::$tableTaxonReference = 'taxon_reference_e42';
         $unit     = new TaxonReference($reference);
         $expected = "INSERT IGNORE INTO `taxon_reference_e42` (
-    `taxonId`, `referenceId`
+    `taxonId`, `referenceId`, `referenceType`
 ) VALUES (
-    'blablubbid-taxon', 'blablubbbla-reference'
+    'blablubbid-taxon', 'blablubbbla-reference', 23
 );\n";
 
         $this->assertEquals($expected, $unit->getInsertSql());
     }
+
+
+    /**
+     * @group export
+     * @group taxonreference
+     */
+    public function testInsertSqlZero()
+    {
+        $reference       = [
+            'taxonId'          => 'blablubbid-taxon',
+            'referenceId'      => 'blablubbbla-reference',
+        ];
+
+        TaxonReference::$tableTaxonReference = 'taxon_reference_e42';
+        $unit     = new TaxonReference($reference);
+        $expected = "INSERT IGNORE INTO `taxon_reference_e42` (
+    `taxonId`, `referenceId`, `referenceType`
+) VALUES (
+    'blablubbid-taxon', 'blablubbbla-reference', 0
+);\n";
+
+        $this->assertEquals($expected, $unit->getInsertSql());
+    }
+
 }
